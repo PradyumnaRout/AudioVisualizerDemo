@@ -10,22 +10,23 @@ import AVFoundation
 struct ContentView: View {
     
     @ObservedObject var audioManager = AudioManager.shared
-    @State private var drawingHeight = true
-    @State private var barHeights: [CGFloat] = Array(repeating: 10, count: 15)
+    @State private var drawingHeight = false
     @State private var timer: Timer?
 
     var body: some View {
         VStack(spacing: 50) {
-            HStack(spacing: 2) {
-                ForEach(0..<15, id: \.self) { index in
+            Spacer()
+            HStack(spacing: 4) {
+                ForEach(0..<12, id: \.self) { index in
                     RoundedRectangle(cornerRadius: 2)
                         .fill(.indigo)
-                        .frame(width: 5, height: barHeights[index])
-//                        .animation(.easeInOut(duration: 0.25), value: barHeights[index])
+                        .frame(width: 6, height: audioManager.levels[index])
                         .animation(.easeInOut(duration: 0.1), value: audioManager.levels[index])
                 }
             }
-
+            
+            Spacer()
+            
             Button {
                 drawingHeight.toggle()
                 if drawingHeight {
@@ -42,10 +43,9 @@ struct ContentView: View {
             }
         }
         .onAppear {
-            if drawingHeight { startAnimating() }
-        }
-        .onDisappear {
-            stopAnimating()
+            withAnimation(.easeInOut(duration: 0.25)) {
+                audioManager.levels = (0..<12).map { _ in CGFloat.random(in: 10...25) }
+            }
         }
     }
 
@@ -59,9 +59,9 @@ struct ContentView: View {
                 return
             }
 
-            withAnimation(.easeInOut(duration: 0.25)) {
-                barHeights = (0..<15).map { _ in CGFloat.random(in: 5...25) }
-            }
+//            withAnimation(.easeInOut(duration: 0.25)) {
+//                audioManager.levels = (0..<12).map { _ in CGFloat.random(in: 10...25) }
+//            }
         }
     }
 
