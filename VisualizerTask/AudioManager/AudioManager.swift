@@ -73,6 +73,7 @@ class AudioManager: ObservableObject {
 //            print("channelData :: \(channelData)")
             
             // RMS value is a measure of the signal's loudness or amplitude
+            /// - We can also do the calculations using accelerator framework.
             var rms: Float = 0
             if let data = channelData {
                 for i in 0..<frameLength {
